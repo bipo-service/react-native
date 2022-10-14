@@ -78,9 +78,19 @@ RCT_EXPORT_MODULE()
   if (_presentationBlock) {
     _presentationBlock([modalHostView reactViewController], viewController, animated, completionBlock);
   } else {
-    [[modalHostView reactViewController] presentViewController:viewController
-                                                      animated:animated
-                                                    completion:completionBlock];
+    UIViewController *lastPresentedViewController = modalHostView.reactViewController;
+      UIViewController *presentedViewController = nil;
+
+
+      while (lastPresentedViewController != nil) {
+          presentedViewController = lastPresentedViewController;
+          lastPresentedViewController = lastPresentedViewController.presentedViewController;
+      }
+
+ 
+      [presentedViewController presentViewController:viewController
+                                                           animated:animated
+                                                         completion:completionBlock];
   }
 }
 
